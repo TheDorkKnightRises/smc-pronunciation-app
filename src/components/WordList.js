@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import ChallengePage from './ChallengePage';
 
 const WordList = () => {
-  const [words, setWords] = useState([{ id: 1, word: 'Hello', done: true}, { id: 2, word: 'World', done: false}, { id: 3, word: 'React', done: false}]);
+  const [words, setWords] = useState([]);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -12,11 +13,7 @@ const WordList = () => {
           throw new Error('Token not found');
         }
   
-        const response = await fetch('/api/words', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(process.env.REACT_APP_BASE_URL + '/words');
   
         if (!response.ok) {
           // Handle error fetching words
@@ -37,17 +34,15 @@ const WordList = () => {
   return (
     <div className="content mdl-card mdl-shadow--2dp">
       <h4>Pick a word to practice!</h4>
-      <ul>
         {words.map((word) => (
-          <ul key={word.id} style={{margin: 1 + "em"}}>
-            <Link to={`/challenge/${word.id}`}>
-              <button className={word.done? ("mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent") : ("mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button")}>
+          <span key={word.wordid} style={{margin: 0.5 + "em"}}>
+            <Link to={`/challenge/${word.word}`}>
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 {word.word} 
               </button>
             </Link>
-          </ul>
+          </span>
         ))}
-      </ul>
     </div>
   );
 };

@@ -2,11 +2,33 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const RegisterForm = ({ handleRegistration }) => {
+const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm_password, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
+
+  const handleRegistration = async (credentials) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_BASE_URL + '/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        // Handle login failure, display an error message
+        throw new Error('Registration failed');
+      } else {
+        // Go to login page
+        window.location.href = '/';
+      }
+    } catch (error) {
+      console.error('Registration Error:', error.message);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

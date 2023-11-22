@@ -13,13 +13,22 @@ body {
     width: 80%;
   }
   .content {
-    width: 80%;
+    width: 100%;
+  }
+  .button-center {
+    width: 150px;
+    margin-left: 50%;
+    position: relative;
+    left: -75px;
   }
   .width-80 {
     width: 80%;
   }
   .width-60 {
     width: 60%;
+  }
+  .recorder {
+    width: 100%;
   }
 }
 
@@ -28,7 +37,16 @@ body {
     width: 95%;
   }
   .content {
-    width: 95%;
+    width: 100%;
+  }
+  .button-center {
+    width: 150px;
+    margin-left: 50%;
+    position: relative;
+    left: -75px;
+  }
+  .recorder {
+    width: 100%;
   }
 }
 

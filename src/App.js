@@ -6,12 +6,13 @@ import WordList from './components/WordList';
 import ChallengePage from './components/ChallengePage';
 
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [username, setUsername] = useState('Sam');
+  const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
+  const [username, setUsername] = useState(localStorage.getItem('username'));
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'));
   
   const handleLogin = async (credentials) => {
     try {
-      const response = await fetch('/auth/login', {
+      const response = await fetch(process.env.REACT_APP_BASE_URL + '/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,13 +26,17 @@ const App = () => {
       }
   
       const data = await response.json();
-      // Assuming your backend returns a token upon successful login
-      const token = data.token; // Adjust this based on your backend response structure
 
+      const token = data.access_token;
       setUsername(data.username);
+      setUserEmail(credentials.email);
+      console.log("Logged in as " + data.username + " with email " + credentials.email)
   
       // Store the token in localStorage or sessionStorage for subsequent requests
       localStorage.setItem('token', token);
+      localStorage.setItem('username', data.username);
+      localStorage.setItem('userEmail', credentials.email);
+      localStorage.setItem('loggedIn', true);
   
       // Set the loggedIn state to true
       setLoggedIn(true);
@@ -40,6 +45,21 @@ const App = () => {
       console.error('Login Error:', error.message);
     }
   };
+
+  const logout = () => {
+    setUsername(null);
+    setUserEmail(null);
+    console.log("Logged out");
+
+    // Reset the token in localStorage
+    localStorage.setItem('token', "");
+    localStorage.setItem('username', "User");
+    localStorage.setItem('userEmail', "");
+    localStorage.setItem('loggedIn', false);
+
+    // Set the loggedIn state to true
+    setLoggedIn(false);
+  };
   
 
   return (
@@ -47,9 +67,9 @@ const App = () => {
       <div>
         {loggedIn ? (
           <>
-            <h3>Welcome {username}</h3> <br/>
+            <h3>Hello {username}    <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={logout}>Logout</button></h3><br/>
             <Routes>
-              <Route path="/challenge/:wordId" element={<ChallengePage />} />
+            <Route path="/challenge/:word" element={<ChallengePage />} />
               <Route path="/" element={<WordList />} />
             </Routes>
           </>
