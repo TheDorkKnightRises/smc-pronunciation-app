@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import WordList from './components/WordList';
 import ChallengePage from './components/ChallengePage';
+import Avatar from "./components/Avatar";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -69,7 +70,8 @@ const App = () => {
           <>
             <h3>Hello {username}    <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={logout}>Logout</button></h3><br/>
             <Routes>
-            <Route path="/challenge/:word" element={<ChallengePage />} />
+              <Route path="/challenge/:word" element={<ChallengePage />} />
+              <Route path="/avatar" element={<Avatar />} />
               <Route path="/" element={<WordList />} />
             </Routes>
           </>
