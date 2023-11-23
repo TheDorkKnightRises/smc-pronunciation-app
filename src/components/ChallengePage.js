@@ -170,7 +170,7 @@ const ChallengePage = () => {
       <i>Practice speaking the following sentence using the recording widget below</i><br/>
       <h4 style={{fontFamily: 'bold'}}>"{sentence}"</h4>
       <VoiceRecorder mainContainerStyle={styles.mainContainerStyle} className="recorder" downloadable={true} onAudioDownload={getAudio} />
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={submitAudio}><i className="material-icons">upload</i> Submit</button>
+      <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={submitAudio}><i className="material-icons">upload</i> Submit</button>
     </div>
     </>
   ) : (<></>);
