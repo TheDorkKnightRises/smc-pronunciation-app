@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { VoiceRecorder } from 'react-voice-recorder-player';
 import dialogPolyfill from 'dialog-polyfill'
 import Avatar from './Avatar';
 
 const ChallengePage = () => {
+  const navigate = useNavigate();
   const { word } = useParams();
   const [username] = useState(localStorage.getItem('username'));
   const [audioBlob, setAudioBlob] = useState(null);
@@ -79,7 +80,8 @@ const ChallengePage = () => {
               // Create sentence of form "word is part of speech"
               var sentence = word + " is ";
               for (let j = 0; j < data[i].meanings.length; j++) {
-                if (data[i].meanings[j].partOfSpeech === "adjective") sentence += "an ";
+                console.log(data[i].meanings[j].partOfSpeech[0])
+                if (['a','e','i','o','u'].includes(data[i].meanings[j].partOfSpeech[0])) sentence += "an ";
                 else sentence += "a ";
                 sentence += data[i].meanings[j].partOfSpeech;
                 if (j < data[i].meanings.length - 1) sentence += " and ";
@@ -122,18 +124,24 @@ const ChallengePage = () => {
         accept: '*/*',
         body: formData
       });
+
+      if (!response.ok) {
+        dialogPolyfill.registerDialog(dialog);
+        dialog.querySelector('.text').innerHTML = 'Error submitting and evaluating audio. Please try again later.'
+        
+        dialog.querySelector('.close').addEventListener('click', function() {
+          dialog.close();
+        });
+        dialog.querySelector('.close').innerHTML = "OK";
+        dialog.showModal();
+        return;
+      }
+
       const data = await response.json();
       console.log(data);
-      dialogPolyfill.registerDialog(dialog);
-      dialog.querySelector('.text').innerHTML = (response.ok) ? 
-        '<b>Score: '+ data.score +'</b>'
-       : '';
+      // Navigate to results page and pass the data
+      navigate(`/results`, { state: { data: data, word: word, sentence: sentence } });
       
-      dialog.querySelector('.close').addEventListener('click', function() {
-        dialog.close();
-      });
-      dialog.querySelector('.close').innerHTML = "OK";
-      dialog.showModal();
     } else {
       dialogPolyfill.registerDialog(dialog);
       dialog.querySelector('.text').innerHTML = "Please record yourself using the recorder widget before submitting";

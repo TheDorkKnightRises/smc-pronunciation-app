@@ -5,6 +5,8 @@ import RegisterForm from './components/RegisterForm';
 import WordList from './components/WordList';
 import ChallengePage from './components/ChallengePage';
 import Avatar from "./components/Avatar";
+import Favorites from "./components/Favorites";
+import ResultsPage from './components/ResultsPage';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -68,10 +70,19 @@ const App = () => {
       <div>
         {loggedIn ? (
           <>
-            <h3>Hello {username}    <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={logout}>Logout</button></h3><br/>
+            <div className='flex-justify'>
+              <h4>Hello {username}</h4>
+              <span className='flex-spacer'></span>
+              <Link to={`/favorites`}>
+                <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"><i className='material-icons'>favorite</i> Favorites</button>
+              </Link>&nbsp;
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={logout}><i className='material-icons'>logout</i> Logout</button>
+            </div><hr/>
             <Routes>
               <Route path="/challenge/:word" element={<ChallengePage />} />
               <Route path="/avatar/:sentence" element={<Avatar />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/results" element={<ResultsPage />} />
               <Route path="/" element={<WordList />} />
             </Routes>
           </>

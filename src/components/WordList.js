@@ -33,10 +33,11 @@ const WordList = () => {
   
   const search = async (e) => {
     e.preventDefault();
-    const searchWord = document.getElementById("expando1").value;
+    var searchWord = document.getElementById("expando1").value;
     if (searchWord === "") {
       return;
     }
+    searchWord = searchWord.toLowerCase();
     console.log("Searching for " + searchWord);
     const response = await fetch(process.env.REACT_APP_DICTIONARY_API_URL + searchWord);
     if (!response.ok) {
