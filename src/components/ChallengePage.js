@@ -6,6 +6,7 @@ import dialogPolyfill from 'dialog-polyfill'
 
 const ChallengePage = () => {
   const { word } = useParams();
+  const [username] = useState(localStorage.getItem('username'));
   const [audioBlob, setAudioBlob] = useState(null);
   const [meanings, setMeanings] = useState([]);
   const [phonetic, setPhonetic] = useState();
@@ -59,7 +60,7 @@ const ChallengePage = () => {
     if (audioBlob) {
       const formData = new FormData();
       formData.append('text', word);
-      formData.append('audio', audioBlob, 'audio.wav');
+      formData.append('audio', audioBlob, username + '_' + word + '.webm');
       // formData.append('token', localStorage.getItem('token'));
       fetch(process.env.REACT_APP_BASE_URL + '/predict/pronunciation', {
         method: 'POST',
