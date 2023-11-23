@@ -71,7 +71,7 @@ const App = () => {
             <h3>Hello {username}    <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={logout}>Logout</button></h3><br/>
             <Routes>
               <Route path="/challenge/:word" element={<ChallengePage />} />
-              <Route path="/avatar" element={<Avatar />} />
+              <Route path="/avatar/:sentence" element={<Avatar />} />
               <Route path="/" element={<WordList />} />
             </Routes>
           </>
