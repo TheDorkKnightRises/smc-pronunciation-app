@@ -1,0 +1,4 @@
+{
+  "SpeechKey":"replace with azure key for the speech resource",
+  "SpeechRegion":"replace with azure region where the speech resource is deployed"
+}
