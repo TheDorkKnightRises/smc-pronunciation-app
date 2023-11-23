@@ -113,6 +113,7 @@ const ChallengePage = () => {
     var dialog = document.querySelector('dialog');
     if (audioBlob) {
       const formData = new FormData();
+      formData.append('name', username);
       formData.append('text', sentence);
       formData.append('audio', audioBlob, username + '_' + word + '.webm');
       // formData.append('token', localStorage.getItem('token'));
