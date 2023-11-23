@@ -11,6 +11,7 @@ const ChallengePage = () => {
   const [audioBlob, setAudioBlob] = useState(null);
   const [meanings, setMeanings] = useState([]);
   const [phonetic, setPhonetic] = useState();
+  const [phoneticARPA, setPhoneticARPA] = useState();
   const [sentence, setSentence] = useState();
   const [phoneticAudioUrl, setPhoneticAudioUrl] = useState();
   const styles = {
@@ -32,11 +33,14 @@ const ChallengePage = () => {
             var today = new Date();
             var lastUpdated = new Date(localData.lastUpdated);
             if (today.getDate() !== lastUpdated.getDate()) {
+              console.log("Data is older than 1 day, deleting cached data");
               localStorage.removeItem(word);
               localData = null;
             } else {
+              console.log("Using cached dictionary data");
               setMeanings(localData.meanings);
               setPhonetic(localData.phonetic);
+              setPhoneticARPA(localData.phoneticARPA);
               setSentence(localData.sentence);
               setPhoneticAudioUrl(localData.phoneticAudioUrl);
               return;
@@ -51,13 +55,27 @@ const ChallengePage = () => {
           }
     
           const data = await response.json();
+          var localmeanings = [];
+          var localphonetic = "";
+          var localphoneticARPA = "";
+          var localsentence = "";
+          var localphoneticAudioUrl = "";
+
           if (data[0].phonetic) {
-            setPhonetic(data[0].phonetics[0].text);
-            if (data[0].phonetics[0].audio !== "") setPhoneticAudioUrl(data[0].phonetics[0].audio);
+            localphonetic = data[0].phonetics[0].text;
+            if (data[0].phonetics[0].audio !== "") localphoneticAudioUrl = data[0].phonetics[0].audio;
           }
+
+          const phResponse = await fetch(process.env.REACT_APP_BASE_URL + '/phonemes/' + word);
+          const phData = await phResponse.json();
+          // Check if phData is a string
+          if (typeof phData === 'string' || phData instanceof String) {
+            localphoneticARPA = phData;
+          }
+
           for (let i = 0; i < data.length; i++) {
             if (data[i].meanings) {
-              setMeanings(data[i].meanings);
+              localmeanings = data[i].meanings;
               // Create sentence of form "word is part of speech"
               var sentence = word + " is ";
               for (let j = 0; j < data[i].meanings.length; j++) {
@@ -66,11 +84,17 @@ const ChallengePage = () => {
                 sentence += data[i].meanings[j].partOfSpeech;
                 if (j < data[i].meanings.length - 1) sentence += " and ";
               }
-              setSentence(sentence);
+              localsentence = sentence;
               break;
             }
           }
-          localStorage.setItem(word, JSON.stringify({meanings: meanings, phonetic: phonetic, sentence: sentence, phoneticAudioUrl: phoneticAudioUrl, lastUpdated: new Date()}));
+          setMeanings(localmeanings);
+          setPhonetic(localphonetic);
+          setPhoneticARPA(localphoneticARPA);
+          setSentence(localsentence);
+          setPhoneticAudioUrl(localphoneticAudioUrl);
+
+          localStorage.setItem(word, JSON.stringify({meanings: localmeanings, phonetic: localphonetic, phoneticARPA: localphoneticARPA, sentence: localsentence, phoneticAudioUrl: localphoneticAudioUrl, lastUpdated: new Date()}));
         }
       } catch (error) {
         console.error('Dictionary data fetch Error:', error.message);
@@ -78,7 +102,7 @@ const ChallengePage = () => {
     };
   
     fetchWordData();
-  });
+  }, []);
   
   function getAudio(audio) {
     console.log(audio);
@@ -126,8 +150,11 @@ const ChallengePage = () => {
       <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><i className="material-icons">arrow_back_ios</i> Back</button>
     </Link>
     <div className="content mdl-card mdl-shadow--2dp">
-    <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> { phoneticAudioUrl ? (<button className="mdl-button mdl-js-button mdl-button--icon" onClick={() => {var audio = new Audio(phoneticAudioUrl); audio.play();}}><i className="material-icons">volume_up</i></button>) : (<></>) }<br/>
-      {phonetic ? (<i style={{fontSize: 1 + 'em', margin: 4 + 'px'}}>{phonetic}</i>) : (<></>)}
+    <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> <hr/>
+    <Avatar word={word} sentence={sentence} /><hr/>
+      { (phonetic || phoneticARPA) ? (<b>phonemes</b>) : (<></>)}
+      {phonetic ? (<i style={{fontSize: 1 + 'em', margin: 4 + 'px'}}>{phonetic} (IPA)</i>) : (<></>)}
+      {phoneticARPA ? (<i style={{fontSize: 1 + 'em', margin: 4 + 'px'}}>{phoneticARPA} (ARPABET)</i>) : (<></>)}
       {meanings.map((meaning) => (
         <div key={meaning.partOfSpeech}>
           <b>{meaning.partOfSpeech}</b>
