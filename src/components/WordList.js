@@ -65,7 +65,7 @@ const WordList = () => {
         {words.map((word) => (
           <span key={word.wordid} style={{margin: 0.5 + "em"}}>
             <Link to={`/challenge/${word.word}`}>
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
                 {word.word} 
               </button>
             </Link>

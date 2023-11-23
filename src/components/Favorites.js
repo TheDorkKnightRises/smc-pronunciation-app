@@ -37,14 +37,14 @@ const Favorites = () => {
   return (
     <>
     <Link to={`/`}>
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><i className="material-icons">arrow_back_ios</i> Back</button>
+      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText"><i className="material-icons">arrow_back_ios</i> Back</button>
     </Link>
     <div className="content mdl-card mdl-shadow--2dp">
       <h4>Favorites</h4>
         {words.map((word) => (
           <span key={word.word} style={{margin: 0.5 + "em"}}>
             <Link to={`/challenge/${word.word}`}>
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
                 {word.word} 
               </button>
             </Link>

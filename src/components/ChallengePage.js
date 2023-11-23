@@ -156,7 +156,7 @@ const ChallengePage = () => {
   return (word != null) ? (
     <>
     <Link to={`/`}>
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><i className="material-icons">arrow_back_ios</i> Back</button>
+      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText"><i className="material-icons">arrow_back_ios</i> Back</button>
     </Link>
     <div className="content mdl-card mdl-shadow--2dp">
     <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> <hr/>

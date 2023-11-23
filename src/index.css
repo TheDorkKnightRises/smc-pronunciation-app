@@ -72,6 +72,20 @@ body {
   padding: 8px;
 }
 
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  width: 100%;
+  height: 240px;
+  z-index: -999;
+}
+
+.whiteText {
+  color: white;
+}
+
 .centered {
   display: flex;
   flex-direction: column;

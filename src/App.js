@@ -70,14 +70,15 @@ const App = () => {
       <div>
         {loggedIn ? (
           <>
+            <div class="mdl-layout-spacer mdl-color--primary bar"></div>
             <div className='flex-justify'>
-              <h4>Hello {username}</h4>
+              <h4 className='whiteText'>Hello {username}</h4>
               <span className='flex-spacer'></span>
               <Link to={`/favorites`}>
-                <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"><i className='material-icons'>favorite</i> Favorites</button>
+                <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i className='material-icons'>favorite</i> Favorites</button>
               </Link>&nbsp;
-              <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={logout}><i className='material-icons'>logout</i> Logout</button>
-            </div><hr/>
+              <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={logout}><i className='material-icons'>logout</i> Logout</button>
+            </div>
             <Routes>
               <Route path="/challenge/:word" element={<ChallengePage />} />
               <Route path="/avatar/:sentence" element={<Avatar />} />
