@@ -58,11 +58,12 @@ const ChallengePage = () => {
   function submitAudio() {
     if (audioBlob) {
       const formData = new FormData();
-      formData.append('audio', audioBlob);
-      formData.append('word', word);
-      formData.append('token', localStorage.getItem('token'));
-      fetch(process.env.REACT_APP_BASE_URL + '/upload', {
+      formData.append('text', word);
+      formData.append('audio', audioBlob, 'audio.wav');
+      // formData.append('token', localStorage.getItem('token'));
+      fetch(process.env.REACT_APP_BASE_URL + '/predict/pronunciation', {
         method: 'POST',
+        accept: '*/*',
         body: formData
       });
     } else {
@@ -83,7 +84,7 @@ const ChallengePage = () => {
       <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><i className="material-icons">arrow_back_ios</i> Back</button>
     </Link>
     <div className="content mdl-card mdl-shadow--2dp">
-    <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4>
+    <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> { phoneticAudioUrl ? (<button className="mdl-button mdl-js-button mdl-button--icon" onClick={() => {var audio = new Audio(phoneticAudioUrl); audio.play();}}><i className="material-icons">volume_up</i></button>) : (<></>) }<br/>
       {phonetic ? (<i style={{fontSize: 1 + 'em', margin: 4 + 'px'}}>{phonetic}</i>) : (<></>)}
       {meanings.map((meaning) => (
         <div key={meaning.partOfSpeech}>
@@ -97,7 +98,7 @@ const ChallengePage = () => {
       ))}
     </div>
       <i>Practice speaking using the recording widget below</i>
-      <VoiceRecorder mainContainerStyle={styles.mainContainerStyle} className="recorder" downloadable={false} onAudioDownload={getAudio} />
+      <VoiceRecorder mainContainerStyle={styles.mainContainerStyle} className="recorder" downloadable={true} onAudioDownload={getAudio} />
       <button className="button-center mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onClick={submitAudio}><i className="material-icons">upload</i> Submit</button>
     </>
   ) : (<></>);
