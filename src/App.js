@@ -89,6 +89,8 @@ const App = () => {
           </>
         ) : (
           <>
+            <div class="mdl-layout-spacer mdl-color--primary bar"></div>
+            <div className='centered'><h3 className='whiteText width-60'>Welcome to SpeechParrot</h3></div>
             <Routes>
               <Route path="/" element={<LoginForm handleLogin={handleLogin} />} />
               <Route path="/register" element={<RegisterForm />} />
