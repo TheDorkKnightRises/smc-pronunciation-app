@@ -62,8 +62,8 @@ const ImagePicker = ({ handleLogin }) => {
   return (
     <div className='fab'>
       <input type="file" accept="image/*" capture="camera" ref={inputFile} style={{display: 'none'}} onChange={recognizeText}/>
-      { processing ? <span class="mdl-chip">
-        <span class="mdl-chip__text">Processing, please wait...</span>&nbsp;
+      { processing ? <span className="mdl-chip">
+        <span className="mdl-chip__text">Processing, please wait...</span>&nbsp;
       </span> : null}
       
       <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--8dp" id="scanner" onClick={onButtonClick}>

@@ -14,7 +14,7 @@ const ScannedWords = () => {
     <>
     <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText" onClick={goBack}><i className="material-icons">arrow_back_ios</i> Back</button>
     <div className="content mdl-card mdl-shadow--2dp">
-      <h4>Detected words</h4>
+      <h4>Detected words</h4> <hr/>
           <span className='flex-wrap' >
         {words.map((word) => (
             <Link key={word} to={`/challenge/${word}`}>

@@ -83,8 +83,11 @@ const ChallengePage = () => {
               for (let j = 0; j < localmeanings.length; j++) {
                 // Check if any meaning has an example sentence
                 if (localmeanings[j].definitions[0].example) {
-                  localsentence = localmeanings[j].definitions[0].example;
-                  break;
+                  // Check if example contains only alphabets, spaces, commas, and periods
+                  if (/^[a-zA-Z ,.]+$/.test(localmeanings[j].definitions[0].example)) {
+                    localsentence = localmeanings[j].definitions[0].example;
+                    break;
+                  }
                 }
               }
               if (localsentence !== "") break;

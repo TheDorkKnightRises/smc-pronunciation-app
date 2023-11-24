@@ -41,7 +41,7 @@ const Favorites = () => {
     <>
     <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText" onClick={goBack}><i className="material-icons">arrow_back_ios</i> Back</button>
     <div className="content mdl-card mdl-shadow--2dp">
-      <h4>Favorites</h4>
+      <h4>Favorites</h4><hr/>
         {words.map((word) => (
           <span key={word.word} style={{margin: 0.5 + "em"}}>
             <Link to={`/challenge/${word.word}`}>
