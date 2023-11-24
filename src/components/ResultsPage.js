@@ -57,7 +57,7 @@ const ResultsPage = () => {
   return (
     <>
     <Link to={`/`}>
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"><i className="material-icons">arrow_back_ios</i> Back to home</button>
+      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText"><i className="material-icons">arrow_back_ios</i> Back to home</button>
     </Link>
     <div className="content mdl-card mdl-shadow--2dp">
       {(data) ?
@@ -69,8 +69,8 @@ const ResultsPage = () => {
           {(data.score > 75) ? <i className='material-icons'>star</i> : <i className='material-icons'>star_border</i>}
         </div>
         <p>Score: {data.score.toFixed(2)}</p>
-        <p>Correct phonemes:</p> <p>{data.stats.canonical.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
-        <p>Perceived phonemes:</p> <p>{data.stats.predicted.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
+        <p>Expected phonemes:</p> <p>{data.stats.canonical.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
+        <p>Detected phonemes:</p> <p>{data.stats.predicted.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={markAsDone}>Mark as Done</button><br/>
         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={markAsFavorite}>Mark as Favorite</button><br/>
         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={() => window.location.href = `/challenge/${word}`}>Try again</button>

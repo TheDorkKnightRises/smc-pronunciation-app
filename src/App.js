@@ -7,6 +7,7 @@ import ChallengePage from './components/ChallengePage';
 import Avatar from "./components/Avatar";
 import Favorites from "./components/Favorites";
 import ResultsPage from './components/ResultsPage';
+import ScannedWords from './components/ScannedWords';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('loggedIn')));
@@ -55,10 +56,7 @@ const App = () => {
     console.log("Logged out");
 
     // Reset the token in localStorage
-    localStorage.setItem('token', "");
-    localStorage.setItem('username', "User");
-    localStorage.setItem('userEmail', "");
-    localStorage.setItem('loggedIn', false);
+    localStorage.clear()
 
     // Set the loggedIn state to true
     setLoggedIn(false);
@@ -70,12 +68,12 @@ const App = () => {
       <div>
         {loggedIn ? (
           <>
-            <div class="mdl-layout-spacer mdl-color--primary bar"></div>
+            <div className="mdl-layout-spacer mdl-color--primary bar"></div>
             <div className='flex-justify'>
               <h4 className='whiteText'>Hello {username}</h4>
               <span className='flex-spacer'></span>
               <Link to={`/favorites`}>
-                <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i className='material-icons'>favorite</i> Favorites</button>
+                <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"><i className='material-icons'>bookmark</i> Favorites</button>
               </Link>&nbsp;
               <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={logout}><i className='material-icons'>logout</i> Logout</button>
             </div>
@@ -84,12 +82,13 @@ const App = () => {
               <Route path="/avatar/:sentence" element={<Avatar />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/results" element={<ResultsPage />} />
+              <Route path="/scanned" element={<ScannedWords />} />
               <Route path="/" element={<WordList />} />
             </Routes>
           </>
         ) : (
           <>
-            <div class="mdl-layout-spacer mdl-color--primary bar"></div>
+            <div className="mdl-layout-spacer mdl-color--primary bar"></div>
             <div className='centered'><h3 className='whiteText width-60'>Welcome to SpeechParrot</h3></div>
             <Routes>
               <Route path="/" element={<LoginForm handleLogin={handleLogin} />} />

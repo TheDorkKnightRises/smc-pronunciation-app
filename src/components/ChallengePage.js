@@ -8,6 +8,7 @@ import Avatar from './Avatar';
 const ChallengePage = () => {
   const navigate = useNavigate();
   const { word } = useParams();
+  const [error, setError] = useState(false);
   const [username] = useState(localStorage.getItem('username'));
   const [audioBlob, setAudioBlob] = useState(null);
   const [meanings, setMeanings] = useState([]);
@@ -15,6 +16,7 @@ const ChallengePage = () => {
   const [phoneticARPA, setPhoneticARPA] = useState();
   const [sentence, setSentence] = useState();
   const [phoneticAudioUrl, setPhoneticAudioUrl] = useState();
+  const [isFavorite, setIsFavorite] = useState(false);
   const styles = {
     mainContainerStyle: {
       width: '100%',
@@ -52,7 +54,8 @@ const ChallengePage = () => {
   
           if (!response.ok) {
             // Handle error fetching words
-            throw new Error('Error fetching word info from dictionary API');
+            console.log('Error fetching word info from dictionary API');
+            setError(true);
           }
     
           const data = await response.json();
@@ -77,10 +80,17 @@ const ChallengePage = () => {
           for (let i = 0; i < data.length; i++) {
             if (data[i].meanings) {
               localmeanings = data[i].meanings;
+              for (let j = 0; j < localmeanings.length; j++) {
+                // Check if any meaning has an example sentence
+                if (localmeanings[j].definitions[0].example) {
+                  localsentence = localmeanings[j].definitions[0].example;
+                  break;
+                }
+              }
+              if (localsentence !== "") break;
               // Create sentence of form "word is part of speech"
               var sentence = word + " is ";
               for (let j = 0; j < data[i].meanings.length; j++) {
-                console.log(data[i].meanings[j].partOfSpeech[0])
                 if (['a','e','i','o','u'].includes(data[i].meanings[j].partOfSpeech[0])) sentence += "an ";
                 else sentence += "a ";
                 sentence += data[i].meanings[j].partOfSpeech;
@@ -102,9 +112,70 @@ const ChallengePage = () => {
         console.error('Dictionary data fetch Error:', error.message);
       }
     };
+
+    const checkFavorite = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found');
+        }
+  
+        const response = await fetch(process.env.REACT_APP_BASE_URL + '/favorites/' + localStorage.getItem('username'));
+  
+        if (!response.ok) {
+          // Handle error fetching words
+          throw new Error('Error fetching favorites');
+        }
+  
+        const data = await response.json();
+        console.log(data);
+        if (data.length > 0) {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].word === word) {
+              setIsFavorite(true);
+              break;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Fetch favorites Error:', error.message);
+      }
+    };
+  
   
     fetchWordData();
+    checkFavorite();
   }, []);
+
+  const toggleFavorite = async () => {
+    // Disable the button temporarily
+    document.getElementById("favoriteBtn").disabled = true;
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite);
+
+    try {
+      const response = await fetch(process.env.REACT_APP_BASE_URL + '/user/progress/favorite', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: localStorage.getItem('username'), word: word, done: 'false', favorite: newFavorite.toString(), score: ''}),
+      });
+
+      if (!response.ok) {
+        // Handle login failure, display an error message
+        throw new Error('Toggle favorite failed');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      // Re-enable the button
+      document.getElementById("favoriteBtn").disabled = false;
+    } catch (error) {
+      // Handle errors such as network failure or incorrect credentials
+      console.error('Mark as done Error:', error.message);
+    }
+  };
   
   function getAudio(audio) {
     console.log(audio);
@@ -152,12 +223,25 @@ const ChallengePage = () => {
       dialog.showModal();
     }
   }
+
+  const goBack = () => {
+		navigate(-1);
+	}
   
   return (word != null) ? (
     <>
-    <Link to={`/`}>
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText"><i className="material-icons">arrow_back_ios</i> Back</button>
-    </Link>
+    <div className='flex-justify'>
+      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText" onClick={goBack}><i className="material-icons">arrow_back_ios</i> Back</button>
+      <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon whiteText" id="favoriteBtn" onClick={toggleFavorite}>
+        { isFavorite ? <i className="material-icons">bookmark</i> : <i className="material-icons">bookmark_border</i> }
+      </button>
+    </div>
+    {error ? 
+    (<div className="content mdl-card mdl-shadow--2dp">
+      <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> <hr/>
+      <p style={{fontSize: 1.2 + 'em', margin: 4 + 'px'}}>Could not find this word in the dictionary. Are you sure this word exists?</p>
+      </div>) : 
+    (<>
     <div className="content mdl-card mdl-shadow--2dp">
     <h4 style={{fontSize: 2 + 'em', margin: 4 + 'px'}}>{word}</h4> <hr/>
     <Avatar word={word} sentence={sentence} /><hr/>
@@ -181,6 +265,8 @@ const ChallengePage = () => {
       <VoiceRecorder mainContainerStyle={styles.mainContainerStyle} className="recorder" downloadable={true} onAudioDownload={getAudio} />
       <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={submitAudio}><i className="material-icons">upload</i> Submit</button>
     </div>
+    </>)}
+    
     </>
   ) : (<></>);
 };

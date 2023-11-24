@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import ChallengePage from './ChallengePage';
-import dialogPolyfill from 'dialog-polyfill'
+import { Link, useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
+  const navigate = useNavigate();
   const [words, setWords] = useState([]);
 
   useEffect(() => {
@@ -33,12 +32,14 @@ const Favorites = () => {
   
     fetchWords();
   }, []);
+
+  const goBack = () => {
+		navigate(-1);
+	}
   
   return (
     <>
-    <Link to={`/`}>
-      <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText"><i className="material-icons">arrow_back_ios</i> Back</button>
-    </Link>
+    <button className="mdl-button mdl-js-button mdl-js-ripple-effect whiteText" onClick={goBack}><i className="material-icons">arrow_back_ios</i> Back</button>
     <div className="content mdl-card mdl-shadow--2dp">
       <h4>Favorites</h4>
         {words.map((word) => (

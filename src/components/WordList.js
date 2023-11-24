@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import ChallengePage from './ChallengePage';
-import dialogPolyfill from 'dialog-polyfill'
+import { Link } from 'react-router-dom';
+import dialogPolyfill from 'dialog-polyfill';
+import ImagePicker from './ImagePicker';
 
 const WordList = () => {
   const [words, setWords] = useState([]);
@@ -60,6 +60,8 @@ const WordList = () => {
         <input className="mdl-textfield__input" type="text" id="expando1" placeholder='Search for a word' onSubmit={search} />
         <button className="mdl-button mdl-js-button mdl-button--icon" onClick={search}><i className="material-icons">search</i></button>
       </div>
+      
+      <ImagePicker />
       
       <h4>Pick a word to practice!</h4>
         {words.map((word) => (
