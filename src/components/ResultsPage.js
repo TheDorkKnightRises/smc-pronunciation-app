@@ -30,29 +30,6 @@ const ResultsPage = () => {
       console.error('Mark as done Error:', error.message);
     }
   };
-
-  const markAsFavorite = async () => {
-    try {
-      const response = await fetch(process.env.REACT_APP_BASE_URL + '/user/progress/favorite', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({username: localStorage.getItem('username'), word: word, done: 'true', favorite: 'true', score: ''}),
-      });
-
-      if (!response.ok) {
-        // Handle login failure, display an error message
-        throw new Error('Mark as favorite failed');
-      }
-
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      // Handle errors such as network failure or incorrect credentials
-      console.error('Mark as done Error:', error.message);
-    }
-  };
   
   return (
     <>
@@ -72,7 +49,6 @@ const ResultsPage = () => {
         <p>Expected phonemes:</p> <p>{data.stats.canonical.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
         <p>Detected phonemes:</p> <p>{data.stats.predicted.filter((e) =>  e !== 'sil' && e !== '<eps>').join(' ')}</p>
         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={markAsDone}>Mark as Done</button><br/>
-        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" onClick={markAsFavorite}>Mark as Favorite</button><br/>
         <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={() => window.location.href = `/challenge/${word}`}>Try again</button>
       </div>
       : <p>Error</p>}
