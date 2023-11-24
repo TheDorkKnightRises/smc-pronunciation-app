@@ -32,6 +32,23 @@ body {
   flex: 1;
 }
 
+.medium-text {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.stars {
+  font-size: 4rem;
+  font-weight: 500;
+  color: rgb(245, 208, 0);
+}
+
+.stars-empty {
+  font-size: 3rem;
+  font-weight: 500;
+  color: rgb(205, 174, 0);
+}
+
 @media screen and (min-width: 800px) {
   body {
     width: 80%;

@@ -14,7 +14,7 @@ const ChallengePage = () => {
   const [meanings, setMeanings] = useState([]);
   const [phonetic, setPhonetic] = useState();
   const [phoneticARPA, setPhoneticARPA] = useState();
-  const [sentence, setSentence] = useState();
+  const [sentence, setSentence] = useState('');
   const [phoneticAudioUrl, setPhoneticAudioUrl] = useState();
   const [isFavorite, setIsFavorite] = useState(false);
   const styles = {
@@ -131,7 +131,6 @@ const ChallengePage = () => {
         }
   
         const data = await response.json();
-        console.log(data);
         if (data.length > 0) {
           for (let i = 0; i < data.length; i++) {
             if (data[i].word === word) {

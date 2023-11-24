@@ -24,7 +24,7 @@ import viseme_id_19 from "../Assets/visemes/viseme_id_19.svg";
 import viseme_id_20 from "../Assets/visemes/viseme_id_20.svg";
 import viseme_id_21 from "../Assets/visemes/viseme_id_21.svg";
 
-import {useState} from "react";
+import { useState, useEffect} from "react";
 
 import FemaleSpeakers from "../configs/femaleSpeakers";
 import { useParams } from "react-router-dom";
@@ -63,22 +63,18 @@ const Avatar = (props) => {
     // define the states
     const [imageIndex, setImageIndex] = useState(0);
     const [selectedVoice, setSelectedVoice] = useState("en-Us-JennyNeural");
-    const [sentence, setSelectedSentence] = useState(useParams()["word"]);
     const [avatarVisible, setAvatarVisible] = useState(false);
+    const [wordOrSentence, setWordOrSentence] = useState("word");
 
-    const sentences = [
-        sentence,
-    ]
-
-    const synthesizeSpeech = () => {
-        console.log(sentence)
+    const synthesizeSpeech = (sentenceToSpeak) => {
+        console.log(sentenceToSpeak)
         const speechConfig = sdk.SpeechConfig.fromSubscription(config.SpeechKey, config.SpeechRegion);
         const speechSynthesizer = new sdk.SpeechSynthesizer(speechConfig);
 
         const ssml = `<speak version='1.0' xml:lang='en-US' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts'> \r\n \
                                 <voice name='${selectedVoice}'> \r\n \
                                     <mstts:viseme type='redlips_front'/> \r\n \
-                                    ${sentence} \r\n \
+                                    ${sentenceToSpeak} \r\n \
                                 </voice> \r\n \
                             </speak>`;
 
@@ -117,13 +113,19 @@ const Avatar = (props) => {
     }
 
     const handleClick = () => {
-        const randomIndex = Math.floor(Math.random() * sentences.length);
-        setSelectedSentence(sentences[randomIndex]);
-        synthesizeSpeech()
-
+        if (wordOrSentence == "sentence") {
+            synthesizeSpeech(props.sentence);
+        } else {
+            synthesizeSpeech(props.word);
+        }
     }
+
     const handleVoiceChange = (event) => {
         setSelectedVoice(event.target.value);
+    }
+
+    const handleWordOrSentenceChange = (event) => {
+        setWordOrSentence(event.target.value);
     }
 
     function toggleVisiblity() {
@@ -139,8 +141,14 @@ const Avatar = (props) => {
 
     return (
         <>
-        <div className="flexBox">
-            <button className="mdl-button mdl-js-button" onClick={() => {handleClick()}}><i className="material-icons">volume_up</i> Play audio</button>
+        <div className="flex-wrap">
+            <button className="mdl-button mdl-js-button" onClick={() => {handleClick()}}><i className="material-icons">volume_up</i> Listen to</button>
+            <div className="">
+                <select className="mdl-textfield__input" value={wordOrSentence} onChange={handleWordOrSentenceChange} id="audioSelection" name="audioSelection">
+                    <option key="word" value="word">word</option>
+                    <option key="sentence" value="sentence">sentence</option>
+                </select>
+            </div>
             <button className="mdl-button mdl-js-button" onClick={() => {toggleVisiblity()}}>
                 {avatarVisible ? <span><i className="material-icons">visibility_off</i> Hide lip movement</span> : <span><i className="material-icons">visibility</i> Show lip movement</span>}
             </button>
@@ -151,7 +159,8 @@ const Avatar = (props) => {
                     {FemaleSpeakers.map((voice) => <option key={voice.label} value={voice.value}>{voice.label}</option>)}
                 </select>
             </div>
-            <p><i>Now click on Play Audio button above to see lip movement</i></p>
+            
+            <p><i>Now click on Listen button above to see lip movement</i></p>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlnsXlink="http://www.w3.org/1999/xlink"
